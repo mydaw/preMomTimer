@@ -1,0 +1,49 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>Kegel: ejercicios suelo pélvico</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/style.css">
+</head>
+<body>
+    <nav class="navbar">
+        <div class="menu-toggle">
+            <div class="hamburger"></div>
+        </div>
+        <ul class="menu">
+            <li><a href="./index.html">Inicio</a></li>
+            <li><a href="./kegel.html">Kegel</a></li>
+            <li><a href="./contracciones.html">Contracciones</a></li>
+        </ul>
+    </nav>
+    <div class="container">
+        <h1 class="mt-5">Kegel Timer</h1>
+        <div class="accordion" id="kegel-info-zone">
+            <p>Introduce el tiempo de fuerza en segundos y el número de repeticiones, luego presiona Start para comenzar.</p>
+            <div class="form-group">
+                <label for="tiempoFuerzaRepeticion">Tiempo de contracción</label>
+                <input type="number" class="form-control" id="tiempoFuerzaRepeticion" placeholder="Ingresa tiempo en segundos">
+            </div>
+            <div class="form-group">
+                <label for="numeroRepeticiones">Número de Repeticiones:</label>
+                <input type="number" class="form-control" id="numeroRepeticiones" value="10">
+            </div>
+        </div>
+        <button id="kegel-start-button" class="btn btn-primary btn-wide">START</button>
+        <button id="kegel-stop-button" class="btn btn-danger btn-wide">STOP</button>
+
+        <div class="canvas-zone" id="kegel-canvas-zone">
+            <div id="errorZone" class="error-message"></div>
+            <div id="kegel-repetition-zone" class="repetition-zone"></div>
+            <div id="kegel-action-zone" class="action-zone"></div>
+            <div id="kegel-detail-zone" class="detail-zone"></div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <script type="text/javascript" src="./js/site.js"></script>
+    <script type="text/javascript" src="./js/kegel.js"></script>
+</body>
+</html>

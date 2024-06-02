@@ -1,0 +1,146 @@
+﻿.action-zone {
+    margin-top: 20px;
+    font-size: 24px;
+    font-weight: bold;
+}
+
+.detail-zone {
+    margin-top: 10px;
+    font-size: 18px;
+}
+
+.error-message {
+    color: red;
+    font-weight: bold;
+}
+
+.btn-wide {
+    width: 100%;
+    margin-bottom: 0.8rem;
+}
+
+.kegel-canvas-zone {
+    padding: 1rem;
+}
+
+.repetition-zone {
+    font-size: 2rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.action-zone {
+    font-size: 3rem;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+
+.detail-zone {
+    font-size: 1.5rem;
+    text-align: center;
+    color: #6c757d;
+}
+
+.dot {
+    font-size: 20px;
+    margin: 0 2px;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px;
+    background-color: #333;
+    color: white;
+}
+
+.menu {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+}
+
+    .menu li {
+        margin: 0 15px;
+    }
+
+    .menu a {
+        color: white;
+        text-decoration: none;
+        font-weight: bold;
+    }
+
+.menu-toggle {
+    display: none;
+    flex-direction: column;
+    cursor: pointer;
+}
+
+    .menu-toggle .hamburger {
+        width: 30px;
+        height: 3px;
+        background-color: white;
+        margin: 5px 0;
+    }
+
+@media (max-width: 768px) {
+    .menu {
+        display: none;
+        flex-direction: column;
+        width: 100%;
+        background-color: #333;
+        position: absolute;
+        top: 60px;
+        left: 0;
+    }
+
+        .menu li {
+            margin: 15px 0;
+            text-align: center;
+        }
+
+    .menu-toggle {
+        display: flex;
+    }
+}
+
+#contracciones-zone {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    height: 70vh;
+}
+
+.contracciones-timer {
+    width: 10px;
+    height: 10px;
+    position: relative;
+}
+
+.parte-circulo {
+    position: absolute;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+}
+
+.contracciones-canvas-zone.action-zone,
+.contracciones-canvas-zone.repetition-zone,
+.contracciones-canvas-zone.detail-zone {
+    width: 100%;
+}
+
+#contracciones-action-zone {
+    order: 1;
+}
+
+#contracciones-repetition-zone {
+    order: 2;
+}
+
+#contracciones-detail-zone {
+    order: 3;
+}
