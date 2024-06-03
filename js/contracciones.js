@@ -6,6 +6,7 @@ var contraccionIndex = 0;
 var respirationIndex = 0;
 var numTotalContracciones;
 let isRunning = false;
+var selectedRespiracion = null;
 
 const contraccion = {
     txt: "CONTRACCION",
@@ -17,16 +18,80 @@ const contraccion = {
 const inspira = {
     txt: "COGE AIRE",
     color: "#000",
-    duration: inspiracionDuration,
+    duration: 0,
     unicode: ""
 };
 
 const espira = {
     txt: "EMPUJA",
+    txtFuerte: "¡EMPUJA FUERTE!",
+    txtOtra: "¡OTRA VEZ!",
+    txtLarga: "¡SOPLA!",
     color: "#ddd",
-    duration: espiracionDuration,
+    colorOtro: "#d0d",
+    duration: 0,
     unicode: ""
 };
+
+const respiraciones = {
+    respiracionAbdominal: (function () {
+
+        const inspiracionDuration = 6;
+        const espiracionDuration = (contraccionDuration / 2) - inspiracionDuration;
+        const respiracionDuration = inspiracionDuration + espiracionDuration;
+
+        return {
+            txt: "Respiración abdominal",
+            inspiracionDuration: inspiracionDuration,
+            espiracionDuration: espiracionDuration,
+            respiracionDuration: respiracionDuration,
+            type: 'Abdominal',
+            steps: `
+            <ol>
+                <li>Póngase una mano sobre el abdomen justo debajo de las costillas y la otra mano sobre el pecho.</li>
+                <li>Respire hondo por la nariz y deje que el abdomen le empuje la mano. El pecho no debería moverse.</li>
+                <li>Exhale a través de los labios fruncidos como si estuviese silbando. Sienta cómo se hunde la mano sobre su abdomen y utilícela para expulsar todo el aire hacia afuera.</li>
+                <li>Respire de esta manera entre las contracciones o durante ellas. Tómese su tiempo con cada respiración.</li>
+            </ol>`
+        };
+    })(),
+
+    respiracionJadeante: (function () {
+        const respiracionDuration = 10;
+        const inspiracionDuration = 4;
+        const espiracionDuration = respiracionDuration - inspiracionDuration;
+        let espiracionCortaDuration = 1;
+        let espiracionLargaDuration = 4;
+
+        return {
+            txt: "Respiración jadeante",
+            inspiracionDuration: inspiracionDuration,
+            espiracionDuration: espiracionDuration,
+            espiracionCortaDuration: espiracionCortaDuration,
+            espiracionCortaRep: 2,
+            espiracionLargaDuration: espiracionLargaDuration,
+            espiracionLargaRep: 1,
+            respiracionDuration: respiracionDuration,
+
+            type: 'Jadeante',
+            steps: `
+            <ol>
+                <li>En cuanto comience una contracción, inspire profundamente por la nariz.</li>
+                <li>Exhale con 2 jadeos cortos seguidos por un soplido más largo. Este tipo de respiración puede describirse como "ji-ji-hoo".</li>
+                <li>Esta respiración en la que se inhala y se exhala jadeando debería durar unos 10 segundos.</li>
+                <li>Repita este tipo de respiración hasta que la contracción se detenga.</li>
+            </ol>`
+        };
+    })()
+};
+
+$('#tipoRespiracion').change(function () {
+    const selectedType = $(this).val();
+    const selectedRespiracion = respiraciones[selectedType];
+    $('#respiracionSteps').html(selectedRespiracion.steps);
+});
+
+$('#tipoRespiracion').trigger('change');
 
 $('#contracciones-start-button').click(function () {
     if (!isRunning) {
@@ -52,18 +117,17 @@ $('#contracciones-start-button').click(function () {
                 $('#contracciones-repetition-zone').text('');
                 startContracciones();
             }
-        }, 1000);
-
+        }, 100);
     }
 });
 
 
 function startContracciones() {
     contraccionIndex = 1;
+    const selectedType = $('#tipoRespiracion').val();
+    selectedRespiracion = respiraciones[selectedType];
     executeContraccionesCycle();
 }
-
-
 
 function executeContraccionesCycle() {
     if (contraccionIndex >= numTotalContracciones) {
@@ -81,8 +145,11 @@ function executeContraccionesCycle() {
     }
 
     let contraccionCounter = contraccion.duration;
-    let inspiracionCounter = inspira.duration;
-    let espiracionCounter = espira.duration;
+    let inspiracionCounter = selectedRespiracion.inspiracionDuration;
+    let espiracionCounter = selectedRespiracion.espiracionDuration;
+    let espiracionCortaCounter = selectedRespiracion?.espiracionCortaDuration * selectedRespiracion?.espiracionCortaRep;
+    let espiracionCortaBreak = espiracionCortaCounter / 2;
+    let espiracionLargaCounter = selectedRespiracion?.espiracionLargaDuration * selectedRespiracion?.espiracionLargaRep;
 
     generarCirculo($('#contracciones-zone'), contraccion.duration, contraccion.color);
     contraccionesInterval = setInterval(() => {
@@ -90,21 +157,43 @@ function executeContraccionesCycle() {
         eliminarPartesCirculo('#contracciones-zone', 1);
 
         if (inspiracionCounter > 0) {
+            createDots($('#contracciones-detail-zone'), inspiracionCounter, inspira.color);
             inspiracionCounter--;
             $('#contracciones-action-zone').text(inspira.txt);
             $('#contracciones-repetition-zone').text('Respiración ' + (respirationIndex + 1));
-
-            $('#contracciones-detail-zone').text('Quedan ' + inspiracionCounter + ' segundos');
         } else if (espiracionCounter > 0) {
+            debugger;
             espiracionCounter--;
-            $('#contracciones-action-zone').text(espira.txt);
-            $('#contracciones-detail-zone').text('Quedan ' + espiracionCounter + ' segundos');
+            if (selectedRespiracion.type == 'Jadeante') {
+                /*$('#contracciones-repetition-zone').text('');*/
+                
+                if (espiracionCortaCounter > 0) {
+                    createDots($('#contracciones-detail-zone'), 1, espira.color);
+                    espiracionCortaCounter--;
+                    $('#contracciones-action-zone').text(espira.txtFuerte);
+                    if (espiracionCortaCounter < espiracionCortaBreak) {
+                        createDots($('#contracciones-detail-zone'), 1, espira.colorOtro);
+                        $('#contracciones-action-zone').text(espira.txtOtra);
+                    }
+                } else {
+                    if (espiracionLargaCounter > 0) {
+                        espiracionLargaCounter--;
+                        $('#contracciones-action-zone').text(espira.txtLarga);
+                        createDots($('#contracciones-detail-zone'), espiracionLargaCounter, espira.color);
+                    }
+                }
+            } else {
+                $('#contracciones-action-zone').text(espira.txt);
+                $('#contracciones-detail-zone').text('Quedan ' + espiracionCounter + ' segundos');
+            }
         }
 
         if (inspiracionCounter === 0 && espiracionCounter === 0) {
             respirationIndex++;
-            inspiracionCounter = inspira.duration;
-            espiracionCounter = espira.duration;
+            inspiracionCounter = selectedRespiracion.inspiracionDuration;
+            espiracionCounter = selectedRespiracion.espiracionDuration;
+            espiracionCortaCounter = selectedRespiracion?.espiracionCortaDuration * selectedRespiracion?.espiracionCortaRep;
+            espiracionLargaCounter = selectedRespiracion?.espiracionLargaDuration * selectedRespiracion?.espiracionLargaRep;
 
             if (respirationIndex % 2 === 0) {
                 contraccionIndex++;
@@ -116,7 +205,7 @@ function executeContraccionesCycle() {
             clearInterval(contraccionesInterval);
             executeContraccionesCycle();
         }
-    }, 1000);
+    }, 100);//1000
 }
 
 $('#contracciones-stop-button').click(function () {
