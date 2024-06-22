@@ -117,7 +117,7 @@ $('#contracciones-start-button').click(function () {
                 $('#contracciones-repetition-zone').text('');
                 startContracciones();
             }
-        }, 100);
+        }, 1000);
     }
 });
 
@@ -205,7 +205,7 @@ function executeContraccionesCycle() {
             clearInterval(contraccionesInterval);
             executeContraccionesCycle();
         }
-    }, 100);//1000
+    }, 1000);
 }
 
 $('#contracciones-stop-button').click(function () {
